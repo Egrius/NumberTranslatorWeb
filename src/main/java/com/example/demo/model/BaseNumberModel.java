@@ -2,18 +2,19 @@ package com.example.demo.model;
 
 public class BaseNumberModel {
     private final int number;
-    private final String numberSstr;
+    private final String numberStr;
 
-    public BaseNumberModel(int number, String numberSstr) {
+    public BaseNumberModel(int number, String numberStr) {
         this.number = number;
-        this.numberSstr = numberSstr;
+        this.numberStr = numberStr;
     }
 
     public int getNumber() {
         return number;
     }
 
-    public String getNumberSstr() {
-        return numberSstr;
+    public String getNumberStr() {
+        return numberStr;
     }
+
 }

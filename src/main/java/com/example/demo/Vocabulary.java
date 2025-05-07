@@ -1,6 +1,6 @@
 package com.example.demo;
 
-import java.util.Map;
+//import java.util.Map;
 
 /**
  * Класс предназначен для перевода чисел в строковое представление на русском языке.
@@ -14,11 +14,12 @@ import java.util.Map;
  * System.out.println(result); // вывод: "сто двадцать три"
  * </pre>
  */
-
+/*
 public class Vocabulary {
     /**
      * Карта чисел от 0 до 9 и их строковых представлений.
      */
+/*
     private final Map<Integer, String> digits = Map.ofEntries(
             Map.entry(1, "один"),
             Map.entry(2, "два"),
@@ -30,9 +31,11 @@ public class Vocabulary {
             Map.entry(8, "восемь"),
             Map.entry(9, "девять")
     );
+    */
     /**
      * Карта чисел от 10 до 19 и их строковых представлений.
      */
+    /*
     private final Map<Integer, String> numbers = Map.ofEntries(
             Map.entry(10, "десять"),
             Map.entry(11, "одиннадцать"),
@@ -45,9 +48,11 @@ public class Vocabulary {
             Map.entry(18, "восемнадцать"),
             Map.entry(19, "девятнадцать")
     );
+    */
     /**
      * Карта десятков от 10 до 90 и их строковых представлений.
      */
+    /*
     private final Map<Integer, String> tens = Map.ofEntries(
             Map.entry(1, "десять"),
             Map.entry(2, "двадцать"),
@@ -59,9 +64,11 @@ public class Vocabulary {
             Map.entry(8, "восемьдесят"),
             Map.entry(9, "девяносто")
     );
+    */
     /**
      * Карта сотен от 100 до 900 и их строковых представлений.
      */
+    /*
     private final Map<Integer, String> hundreds = Map.ofEntries(
             Map.entry(1, "сто"),
             Map.entry(2, "двести"),
@@ -73,16 +80,17 @@ public class Vocabulary {
             Map.entry(8, "восемьсот"),
             Map.entry(9, "девятьсот")
     );
-
+*/
     /**
      * Переменная типа {@link Declination}, предназначенная для корректного склонения числа
      */
+    /*
     private final Declination declination = new Declination();
-
+*/
     /**
      * Конструктор класса
      */
-    public Vocabulary() { }
+    //public Vocabulary() { }
 
     /**
      * Переводит числовое значение в строковое представление с учётом склонений.
@@ -100,6 +108,7 @@ public class Vocabulary {
      * @param type тип числа (например, целое или дробное) {@link NumberPartType}.
      * @return строковое представление числа с учётом склонения.
      */
+    /*
     protected String translateNumber(int number, int count, NumberPartType type) {
         // Переменная, для хранения числа сотен. Пример: 123, hundredsPart = 1.
         int hundredsPart = number / 100;
@@ -122,6 +131,7 @@ public class Vocabulary {
          * Проверка исключительной ситуации (числа от 10 до 19 нельзя собрать по частям).
          * Иначе число собирается по частям. Пример: 21 -> двадцать + один.
          */
+/*
         if (tensAndUnits >= 10 && tensAndUnits <= 19){
             result += numbers.get(tensAndUnits) + " " + declination.getIntDeclination(tensAndUnits, count);
             return result.trim();
@@ -151,6 +161,7 @@ public class Vocabulary {
                          * Случай, где передаваемая часть числа представляет разряд тысяч.
                          * Выполняется соответсвующий перевод.
                          */
+/*
                         if (unitsPart == 1) result += "одна" + " ";
                         else if (unitsPart == 2) result += "две" + " ";
                         else result += digits.get(unitsPart) + " ";
@@ -174,7 +185,9 @@ public class Vocabulary {
      * @param countToPass количество разрядов для склонения.
      * @return строковое представление дробной части числа с корректным склонением.
      */
+    /*
     protected String getFractionalDeclination(int lastDigit, int countToPass) {
         return declination.getFractionalDeclination(lastDigit, countToPass);
     }
 }
+*/

@@ -22,6 +22,7 @@ import java.util.List;
  * @see Vocabulary
  * @see Declination
  */
+/*
 public class NumberTranslator {
 
     // Переменная типа Vocabulary, необходимая для перевода числа.
@@ -57,6 +58,7 @@ public class NumberTranslator {
      * @see #buildNumber(StringBuilder, List, NumberPartType)
      * @see #buildFractionalNumber(StringBuilder, List, int)
      */
+/*
     public String printNumber(String number) throws StartsFromZeroException,
                                                     StringIndexOutOfBoundsException,
                                                     InvalidCharException
@@ -135,6 +137,7 @@ public class NumberTranslator {
      * @param number строка введенного числа.
      * @throws StartsFromZeroException выбрасывается, если число начинается с нуля.
      */
+/*
     private void specialCase(StringBuilder result, String number) throws StartsFromZeroException {
         if (number.equals("-0") || number.equals("0")) {
             result.append("ноль");
@@ -153,6 +156,7 @@ public class NumberTranslator {
      * @return - число введенное пользователем, не содержащее знака "-",
      * если он был изначально, то к результату перевода добавляется "минус".
      */
+/*
     private String checkForNegative(String number, StringBuilder result) {
         if (number.charAt(0) == '-') {
             result.append("минус").append(" ");
@@ -177,6 +181,7 @@ public class NumberTranslator {
      * @param number строковое представление числа.
      * @return список цифр целой части числа.
      */
+/*
     private List<Integer> intPartToDigits(String number) {
         // Возвращаемый список типа Integer, в котором будут храниться цифры числа.
         List<Integer> digits = new ArrayList<>();
@@ -200,6 +205,7 @@ public class NumberTranslator {
      * @param digitsDecimal - список цифр дробной части числа.
      * @return - список цифр без ведущих нулей.
      */
+/*
     private List<Integer> deleteLeadingZeros(List<Integer> digitsDecimal) {
         // Проверка на наличие дробной части.
         if (digitsDecimal.isEmpty()) return digitsDecimal;
@@ -217,6 +223,7 @@ public class NumberTranslator {
      * @param digitsDecimal список цифр дробной части числа.
      * @return список цифр без завершающих нулей.
      */
+/*
     private List<Integer> deleteEndZeros(List<Integer> digitsDecimal) {
         // Проверка на наличие дробной части
         if (digitsDecimal.isEmpty()) return digitsDecimal;
@@ -250,6 +257,7 @@ public class NumberTranslator {
      * @param digitsDecimal список цифр дробной части.
      * @param lastIntDigit последняя цифра целой части числа, необходимая для корректного склонения.
      */
+/*
     private void buildFractionalNumber(StringBuilder result, List<Integer> digitsDecimal, int lastIntDigit) {
         // Удаление завершающих нулей дробной части, для корректного определения разрядности
         digitsDecimal = deleteEndZeros(digitsDecimal);
@@ -296,6 +304,7 @@ public class NumberTranslator {
      * @see #translateIntPart(int, int)
      * @see #translateFractionalPart(int, int)
      */
+/*
     private void buildNumber(StringBuilder result, List<Integer> digits, NumberPartType type) {
         int count = digits.size();
         int i = 0;
@@ -330,6 +339,7 @@ public class NumberTranslator {
      * @param countToPass разрядность передаваемой части числа.
      * @return строковое представление переданной части числа. Например: "сто", "одиннадцать".
      */
+/*
     private String translateIntPart(int number, int countToPass) {
         return vocabulary.translateNumber(number, countToPass, NumberPartType.INTEGER);
     }
@@ -342,7 +352,9 @@ public class NumberTranslator {
      * @return - перевод части дробного числа.
      * @see Vocabulary
      */
+/*
     private String translateFractionalPart(int number, int countToPass) {
         return vocabulary.translateNumber(number, countToPass, NumberPartType.FRACTIONAL);
     }
 }
+ */
