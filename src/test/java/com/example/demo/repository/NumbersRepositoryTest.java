@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.DigitsModel;
 import com.example.demo.model.NumbersModel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
