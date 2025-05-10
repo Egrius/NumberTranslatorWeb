@@ -1,24 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Number Translator</title>
-    <link rel="stylesheet" href="../static/main.css">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
 <div class="ui">
-    <label for="numberInput"><input type="text" placeholder="Введите число..." id="numberInput" class="input"></label>
-    <button onclick="translateNumber()">
-        <span class="transition"></span>
-        <span class="gradient"></span>
-        <span class="label">Перевести</span>
-    </button>
-    <div class="output" id="output">
-        <span>test output</span>
-    </div>
+    <form action="/number_translator" method="POST">
+        <label for="numberInput">
+            <input type="text" name="numberStr" placeholder="Введите число..." id="numberInput" class="input">
+        </label>
+
+        <button type="submit">
+            <span class="transition"></span>
+            <span class="gradient"></span>
+            <span class="label">Перевести</span>
+        </button>
+        <div class="output" id="output">
+            <span th:text="${numberStr}"></span>
+        </div>
+    </form>
+
 </div>
 
-<script src="../static/script.js"></script>
 </body>
 </html>
