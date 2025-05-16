@@ -4,9 +4,11 @@ import com.example.demo.model.BaseType;
 import com.example.demo.model.DeclinationsModel;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 
+@Repository
 public class DeclinationsRepository {
     private final JdbcTemplate jdbc;
 
@@ -14,7 +16,24 @@ public class DeclinationsRepository {
         this.jdbc = jdbc;
     }
 
-    public DeclinationsModel getRepresentationForCategory(BaseType category, int partLength) throws SQLException{
+    public String getIntDeclination(int number, int partLength) throws SQLException{
+        if (partLength < 4) {
+            return "";
+        }
+        DeclinationsModel resultSet = getRepresentationForCategory(BaseType.INTEGER, partLength);
+        if (number == 1) return resultSet.getSingular();
+        else if (number >= 2 && number <= 4) return resultSet.getFew();
+        else return resultSet.getMany();
+    }
+
+    public String getFractionalDeclination (int number, int count) throws SQLException{
+        DeclinationsModel resultSet = getRepresentationForCategory(BaseType.FRACTIONAL, count);
+        String base = resultSet.getFraction_base();
+        String ending =  (number == 1) ? resultSet.getSingular() : resultSet.getMany();
+        return base + ending;
+    }
+
+    protected DeclinationsModel getRepresentationForCategory(BaseType category, int partLength) throws SQLException{
         int numberToPass = partLength;
         if(category == BaseType.INTEGER) {
             switch (partLength) {
