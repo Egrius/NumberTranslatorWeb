@@ -4,9 +4,11 @@ import com.example.demo.model.BaseType;
 import com.example.demo.model.DeclinationsModel;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 
+@Repository
 public class DeclinationsRepository {
     private final JdbcTemplate jdbc;
 

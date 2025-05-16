@@ -3,7 +3,9 @@ package com.example.demo.repository;
 import com.example.demo.model.NumbersModel;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class NumbersRepository extends BaseRepository<NumbersModel, Integer> {
     public NumbersRepository(JdbcTemplate jdbc) {
         super(jdbc);
