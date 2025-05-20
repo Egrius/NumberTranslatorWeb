@@ -74,18 +74,19 @@ public class NumberTranslatorService {
             return result.toString().trim();
 
         } catch (StartsFromZeroException e) {
-            throw new StartsFromZeroException();
+            throw new StartsFromZeroException(e.getMessage());
         } catch (StringIndexOutOfBoundsException e) {
             throw new StringIndexOutOfBoundsException(e.getMessage());
         }
     }
 
     private void specialCase(StringBuilder result, String number) throws StartsFromZeroException {
+
         if (number.equals("-0") || number.equals("0")) {
             result.append("ноль");
         }
         if ((number.startsWith("-0") || number.startsWith("0")) && number.length() > 2) {
-            throw new StartsFromZeroException();
+            throw new StartsFromZeroException("Целое число не может начинаться с 0");
         }
     }
 

@@ -39,10 +39,11 @@ public class NumberTranslatorController {
             System.out.println("After processing: " + result);
             model.addAttribute("translatedResult", result);
         } catch (StartsFromZeroException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error during translation: " + e.getMessage());
+            model.addAttribute("text", "Ошибка при переводе: " + e.getMessage());
         } catch (InvalidCharException | SQLException e) {
         System.out.println("Error during translation: " + e.getMessage());
-        model.addAttribute("error", "Ошибка при переводе: " + e.getMessage());
+        model.addAttribute("text", "Ошибка при переводе: " + e.getMessage());
     }
         return "main.html";
     }

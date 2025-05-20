@@ -94,7 +94,6 @@ public class VocabularyService {
         return result.trim();
     }
 
-
     protected String getFractionalDeclination(int lastDigit, int countToPass) throws SQLException{
         return declinationsRepository.getFractionalDeclination(lastDigit, countToPass);
     }

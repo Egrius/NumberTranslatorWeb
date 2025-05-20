@@ -56,10 +56,16 @@ public class DeclinationsRepository {
 
         String query =
                 """
-                SELECT category, number, singular, few, many, fraction_base_id
+                SELECT
+                d.category,
+                d.number,
+                d.singular,
+                d.few,
+                d.many,
+                d.fraction_base_id,
+                COALESCE(fb.base, '') AS base
                 FROM declinations d
-                LEFT JOIN fraction_bases fb
-                ON d.fraction_base_id = fb.id
+                LEFT JOIN fraction_bases fb ON d.fraction_base_id = fb.id
                 WHERE d.category = ? AND d.number = ?;
                 """;
         RowMapper<DeclinationsModel> declinationsRowMapper = (r,i) ->
@@ -73,6 +79,6 @@ public class DeclinationsRepository {
                         (r.getObject("fraction_base_id") != null) ? r.getInt("fraction_base_id") : 0,
                         r.getString("base")
                         );
-        return jdbc.queryForObject(query, declinationsRowMapper, category, numberToPass);
+        return jdbc.queryForObject(query, declinationsRowMapper, category.name(), numberToPass);
     }
 }
