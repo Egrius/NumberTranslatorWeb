@@ -19,7 +19,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-
 class VocabularyServiceTest {
 
     @Mock
@@ -47,7 +46,7 @@ class VocabularyServiceTest {
                                                     tensRepository,
                                                     numbersRepository,
                                                     digitsRepository
-        );
+                                                  );
     }
 
     @Test
