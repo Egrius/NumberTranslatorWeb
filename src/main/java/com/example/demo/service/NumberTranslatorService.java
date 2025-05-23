@@ -1,24 +1,24 @@
 package com.example.demo.service;
 
 import com.example.demo.model.BaseType;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class NumberTranslatorService {
-    private final VocabularyService vocabularyService;
+    private final VocabularyService vocabulary;
 
-    //   private final  StringBuilder result = new StringBuilder();
-    public NumberTranslatorService(VocabularyService vocabularyService) {
-        this.vocabularyService = vocabularyService;
+    public NumberTranslatorService(VocabularyService vocabulary) {
+        this.vocabulary = vocabulary;
     }
 
     public String printNumber(String number) throws StartsFromZeroException,
-            StringIndexOutOfBoundsException,
-            InvalidCharException
+                                                    StringIndexOutOfBoundsException,
+                                                    InvalidCharException,
+                                                    SQLException
     {
         // В случае, если передаваемая строка пустая, выбрасывается ошибка.
         if (number == null || number.isEmpty()) {
@@ -30,13 +30,12 @@ public class NumberTranslatorService {
 
         try {
             // Проверка числа на отрицательность
-            checkForNegative(number, result);
+            number = checkForNegative(number, result);
 
             // Проверка ввёденных символов, в случае несоответствия выбрасывается ошибка.
             if (!number.matches("^[\\d.,]+$")) {
                 throw new InvalidCharException("Ошибка! Число содержит недопустимые символы!");
             }
-
             // Массив, состоящий из целой и дробной части, которые отделены "." либо ",".
             String[] parts = number.split("[.,]");
 
@@ -75,13 +74,79 @@ public class NumberTranslatorService {
             return result.toString().trim();
 
         } catch (StartsFromZeroException e) {
-            throw new StartsFromZeroException();
+            throw new StartsFromZeroException(e.getMessage());
         } catch (StringIndexOutOfBoundsException e) {
             throw new StringIndexOutOfBoundsException(e.getMessage());
         }
     }
 
-    private void buildFractionalNumber(StringBuilder result, List<Integer> digitsDecimal, int lastIntDigit) {
+    private void specialCase(StringBuilder result, String number) throws StartsFromZeroException {
+
+        if (number.equals("-0") || number.equals("0")) {
+            result.append("ноль");
+        }
+        if ((number.startsWith("-0") || number.startsWith("0")) && number.length() > 2) {
+            throw new StartsFromZeroException("Целое число не может начинаться с 0");
+        }
+    }
+
+    private String checkForNegative(String number, StringBuilder result) {
+        if (number.charAt(0) == '-') {
+            result.append("минус").append(" ");
+            number = number.substring(1);
+            return number;
+        }
+        return number;
+    }
+
+    private List<Integer> intPartToDigits(String number) {
+        // Возвращаемый список типа Integer, в котором будут храниться цифры числа.
+        List<Integer> digits = new ArrayList<>();
+
+        // Проход по целой части введенного числа.
+        for (int i = 0; i < number.length(); i++) {
+            // В случае обнаружения разделителя целой части от дробной, возвращается список целой части.
+            if(number.charAt(i) == '.' || number.charAt(i) == ',') {
+                return digits;
+            }
+            // Добавление цифр в список.
+            digits.add(Character.getNumericValue(number.charAt(i)));
+        }
+        // При отсутствии разделителя число возвращается в виде списка всех его цифр и считается целым.
+        return digits;
+    }
+
+    private List<Integer> deleteLeadingZeros(List<Integer> digitsDecimal) {
+        // Проверка на наличие дробной части.
+        if (digitsDecimal.isEmpty()) return digitsDecimal;
+
+        // Удаление ведущих нулей из дробной части числа.
+        return digitsDecimal
+                .stream()
+                .dropWhile(e -> e == 0)
+                .toList();
+    }
+
+    private List<Integer> deleteEndZeros(List<Integer> digitsDecimal) {
+        // Проверка на наличие дробной части
+        if (digitsDecimal.isEmpty()) return digitsDecimal;
+
+        // Переменная для хранения индекса последнего ненулевого элемента.
+        int lastNonZeroIndex = digitsDecimal.size() - 1;
+
+        // Поиск последнего ненулевого элемента.
+        while (lastNonZeroIndex >= 0 && digitsDecimal.get(lastNonZeroIndex) == 0) {
+            lastNonZeroIndex--;
+        }
+
+        // Удаление завершающих нулей из дробной части числа.
+        return digitsDecimal.stream()
+                .limit(lastNonZeroIndex + 1)
+                .toList();
+    }
+
+    private void buildFractionalNumber(StringBuilder result, List<Integer> digitsDecimal, int lastIntDigit)
+                                                                                            throws SQLException {
         // Удаление завершающих нулей дробной части, для корректного определения разрядности
         digitsDecimal = deleteEndZeros(digitsDecimal);
 
@@ -104,73 +169,12 @@ public class NumberTranslatorService {
             int lastDigit = digitsDecimal.getLast();
 
             // Получение склонения с помощью метода класса Vocabulary и добавление его к результату перевода.
-            String declension = vocabularyService.getFractionalDeclination(lastDigit, countToPass);
+            String declension = vocabulary.getFractionalDeclination(lastDigit, countToPass);
             result.append(declension).append(" ");
         }
     }
 
-    private List<Integer> deleteEndZeros(List<Integer> digitsDecimal) {
-        // Проверка на наличие дробной части
-        if (digitsDecimal.isEmpty()) return digitsDecimal;
-
-        // Переменная для хранения индекса последнего ненулевого элемента.
-        int lastNonZeroIndex = digitsDecimal.size() - 1;
-
-        // Поиск последнего ненулевого элемента.
-        while (lastNonZeroIndex >= 0 && digitsDecimal.get(lastNonZeroIndex) == 0) {
-            lastNonZeroIndex--;
-        }
-
-        // Удаление завершающих нулей из дробной части числа.
-        return digitsDecimal.stream()
-                .limit(lastNonZeroIndex + 1)
-                .toList();
-    }
-
-    private List<Integer> deleteLeadingZeros(List<Integer> digitsDecimal) {
-        // Проверка на наличие дробной части.
-        if (digitsDecimal.isEmpty()) return digitsDecimal;
-
-        // Удаление ведущих нулей из дробной части числа.
-        return digitsDecimal
-                .stream()
-                .dropWhile(e -> e == 0)
-                .toList();
-    }
-
-    private void checkForNegative(String number, StringBuilder result) {
-        if (number.charAt(0) == '-') {
-            result.append("минус").append(" ");
-            number = number.substring(1);
-        }
-    }
-
-    private void specialCase(StringBuilder result, String number) throws StartsFromZeroException {
-        if (number.equals("-0") || number.equals("0")) {
-            result.append("ноль");
-        }
-        if ((number.startsWith("-0") || number.startsWith("0")) && number.length() > 2) {
-            throw new StartsFromZeroException();
-        }
-    }
-
-    private List<Integer> intPartToDigits(String number) {
-        // Возвращаемый список типа Integer, в котором будут храниться цифры числа.
-        List<Integer> digits = new ArrayList<>();
-
-        // Проход по целой части введенного числа.
-        for (int i = 0; i < number.length(); i++) {
-            // В случае обнаружения разделителя целой части от дробной, возвращается список целой части.
-            if(number.charAt(i) == '.' || number.charAt(i) == ',') {
-                return digits;
-            }
-            // Добавление цифр в список.
-            digits.add(Character.getNumericValue(number.charAt(i)));
-        }
-        // При отсутствии разделителя число возвращается в виде списка всех его цифр и считается целым.
-        return digits;
-    }
-    private void buildNumber(StringBuilder result, List<Integer> digits, BaseType type) {
+    private void buildNumber(StringBuilder result, List<Integer> digits, BaseType type) throws SQLException{
         int count = digits.size();
         int i = 0;
 
@@ -197,12 +201,12 @@ public class NumberTranslatorService {
         }
     }
 
-    private String translateIntPart(int number, int countToPass) {
-        return vocabularyService.translateNumber(number, countToPass, BaseType.INTEGER);
+    private String translateIntPart(int number, int countToPass) throws SQLException {
+        return vocabulary.translateNumber(number, countToPass, BaseType.INTEGER);
     }
 
 
-    private String translateFractionalPart(int number, int countToPass) {
-        return vocabularyService.translateNumber(number, countToPass, BaseType.FRACTIONAL);
+    private String translateFractionalPart(int number, int countToPass) throws SQLException{
+        return vocabulary.translateNumber(number, countToPass, BaseType.FRACTIONAL);
     }
 }

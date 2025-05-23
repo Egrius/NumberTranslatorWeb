@@ -16,7 +16,24 @@ public class DeclinationsRepository {
         this.jdbc = jdbc;
     }
 
-    public DeclinationsModel getRepresentationForCategory(BaseType category, int partLength) throws SQLException{
+    public String getIntDeclination(int number, int partLength) throws SQLException{
+        if (partLength < 4) {
+            return "";
+        }
+        DeclinationsModel resultSet = getRepresentationForCategory(BaseType.INTEGER, partLength);
+        if (number == 1) return resultSet.getSingular();
+        else if (number >= 2 && number <= 4) return resultSet.getFew();
+        else return resultSet.getMany();
+    }
+
+    public String getFractionalDeclination (int number, int count) throws SQLException{
+        DeclinationsModel resultSet = getRepresentationForCategory(BaseType.FRACTIONAL, count);
+        String base = resultSet.getFraction_base();
+        String ending =  (number == 1) ? resultSet.getSingular() : resultSet.getMany();
+        return base + ending;
+    }
+
+    protected DeclinationsModel getRepresentationForCategory(BaseType category, int partLength) throws SQLException{
         int numberToPass = partLength;
         if(category == BaseType.INTEGER) {
             switch (partLength) {
@@ -39,10 +56,16 @@ public class DeclinationsRepository {
 
         String query =
                 """
-                SELECT category, number, singular, few, many, fraction_base_id
+                SELECT
+                d.category,
+                d.number,
+                d.singular,
+                d.few,
+                d.many,
+                d.fraction_base_id,
+                COALESCE(fb.base, '') AS base
                 FROM declinations d
-                LEFT JOIN fraction_bases fb
-                ON d.fraction_base_id = fb.id
+                LEFT JOIN fraction_bases fb ON d.fraction_base_id = fb.id
                 WHERE d.category = ? AND d.number = ?;
                 """;
         RowMapper<DeclinationsModel> declinationsRowMapper = (r,i) ->
@@ -56,6 +79,6 @@ public class DeclinationsRepository {
                         (r.getObject("fraction_base_id") != null) ? r.getInt("fraction_base_id") : 0,
                         r.getString("base")
                         );
-        return jdbc.queryForObject(query, declinationsRowMapper, category, numberToPass);
+        return jdbc.queryForObject(query, declinationsRowMapper, category.name(), numberToPass);
     }
 }
