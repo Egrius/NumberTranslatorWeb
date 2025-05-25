@@ -1,13 +1,13 @@
 package com.example.demo.repository;
 
 import com.example.demo.model.HundredsModel;
-import com.example.demo.model.NumbersModel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@ActiveProfiles("test")
 class HundredsRepositoryTest {
     private final JdbcTemplate jdbc = Mockito.mock(JdbcTemplate.class);
     private final HundredsRepository hundredsRepository = new HundredsRepository(jdbc);

@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.sql.SQLException;
@@ -18,19 +19,22 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@ActiveProfiles("test")
 class DeclinationsRepositoryTest {
     private final JdbcTemplate jdbc = Mockito.mock(JdbcTemplate.class);
     private final DeclinationsRepository declinationsRepository = new DeclinationsRepository(jdbc);
 
     @Test
     void testGetRepresentationByParams() throws SQLException {
-        DeclinationsModel expected = new DeclinationsModel(BaseType.FRACTIONAL, 10, "ая", null, "ых", 10, "десятитриллионн");
+        DeclinationsModel expected = new DeclinationsModel(
+                BaseType.INTEGER, 10, "ая", null, "ых", 10, "десятитриллионн");
 
-        when(jdbc.queryForObject(anyString(), any(RowMapper.class), eq(BaseType.FRACTIONAL), eq(10)))
+        when(jdbc.queryForObject(anyString(), any(RowMapper.class), eq(BaseType.INTEGER.name()), eq(10)))
                 .thenReturn(expected);
 
-        DeclinationsModel result = declinationsRepository.getRepresentationForCategory(BaseType.FRACTIONAL, 10);
+        DeclinationsModel result = declinationsRepository.getRepresentationForCategory(BaseType.INTEGER, 10);
 
+        assertNotNull(result, "Результат не должен быть null");
         assertEquals(expected.getBase(), result.getBase());
         assertEquals(expected.getNumber(), result.getNumber());
         assertEquals(expected.getSingular(), result.getSingular());

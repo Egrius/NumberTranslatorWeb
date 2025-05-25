@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 
 @Configuration
 public class DataSourceConfig {
+
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
@@ -28,4 +29,5 @@ public class DataSourceConfig {
     public NumberTranslatorService numberTranslatorService(VocabularyService vocabularyService) {
         return new NumberTranslatorService(vocabularyService);
     }
+
 }
