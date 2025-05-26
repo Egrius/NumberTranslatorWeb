@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  translator:
+    build: .
+    container_name: translator
+    ports:
+      - '8088:8088'
+    restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    external: true
