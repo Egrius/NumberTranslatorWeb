@@ -1,15 +1,46 @@
-version: '3.9'
-
 services:
   translator:
     build: .
     container_name: translator
     ports:
       - '8088:8088'
+    depends_on:
+      db:
+        condition: service_healthy
     restart: unless-stopped
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 3306
+      DATABASE_USER: translator
+      DATABASE_PASSWORD: translator
     networks:
       - app-network
 
+  db:
+    image: mysql:8.0
+    container_name: translator-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: numbers_representation
+      MYSQL_USER: translator
+      MYSQL_PASSWORD: translator
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql:ro
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app-network
+
+volumes:
+  mysql-data:
+
 networks:
   app-network:
-    external: true
+    driver: bridge

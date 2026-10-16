@@ -4,15 +4,12 @@ import com.example.demo.service.InvalidCharException;
 import com.example.demo.service.NumberTranslatorService;
 import com.example.demo.service.StartsFromZeroException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.spring6.context.SpringContextUtils;
 
 import java.sql.SQLException;
 
-//Здесь пока наброски
 
 @Controller
 public class NumberTranslatorController {
